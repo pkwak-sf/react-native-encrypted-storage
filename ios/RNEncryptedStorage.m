@@ -124,4 +124,30 @@ RCT_EXPORT_METHOD(clear:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseReje
     
     resolve(nil);
 }
+
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getItemSynchronous:(NSString *)key)
+{
+    NSDictionary* getQuery = @{
+        (__bridge id)kSecClass : (__bridge id)kSecClassGenericPassword,
+        (__bridge id)kSecAttrAccount : key,
+        (__bridge id)kSecReturnData : (__bridge id)kCFBooleanTrue,
+        (__bridge id)kSecMatchLimit : (__bridge id)kSecMatchLimitOne
+    };
+    
+    CFTypeRef dataRef = NULL;
+    OSStatus getStatus = SecItemCopyMatching((__bridge CFDictionaryRef)getQuery, &dataRef);
+    
+    if (getStatus == errSecSuccess) {
+        NSString* storedValue = [[NSString alloc] initWithData: (__bridge NSData*)dataRef encoding: NSUTF8StringEncoding];
+        return storedValue;
+    }
+
+    else if (getStatus == errSecItemNotFound) {
+        return nil;
+    }
+    
+    else {
+        return nil;
+    }
+}
 @end

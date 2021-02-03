@@ -116,4 +116,14 @@ public class RNEncryptedStorageModule extends ReactContextBaseJavaModule {
             promise.reject(new Exception("An error occured while clearing SharedPreferences"));
         }
     }
+
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    public String getItemSynchronous(String key) {
+        if (this.sharedPreferences == null) {
+            throw new NullPointerException("Could not initialize SharedPreferences");
+        }
+
+        String value = this.sharedPreferences.getString(key, null);
+        return value;
+    }
 }

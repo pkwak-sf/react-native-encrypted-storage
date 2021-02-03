@@ -104,4 +104,27 @@ export default class EncryptedStorage {
 
     return RNEncryptedStorage.clear();
   }
+
+  /**
+   * Retrieves data from the disk, using SharedPreferences or KeyChain, depending on the platform and returns it as the specified type.
+   * @param {string} key - A string that is associated to a value.
+   */
+  static getItemSynchronous(key: string): string;
+
+  /**
+   * Retrieves data from the disk, using SharedPreferences or KeyChain, depending on the platform and returns it as the specified type.
+   * @param {string} key - A string that is associated to a value.
+   * @param {Function} cb - The function to call when the operation completes.
+   */
+  static getItemSynchronous(key: string, cb: StorageValueCallback): void;
+  static getItemSynchronous(
+    key: string,
+    cb?: StorageValueCallback
+  ): string {
+    if (cb) {
+      return RNEncryptedStorage.getItemSynchronous(key).then(cb).catch(cb);
+    }
+
+    return RNEncryptedStorage.getItemSynchronous(key);
+  }
 }
